@@ -1,7 +1,10 @@
 "use client";
 
-import { motion, MotionValue, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import dynamic from "next/dynamic";
 import { useRef } from "react";
+
+const SunsetCanvas = dynamic(() => import("./SunsetCanvas"), { ssr: false });
 
 type Project = {
   title: string;
@@ -34,62 +37,6 @@ const projects: Project[] = [
   },
 ];
 
-function SunArc({ progress }: { progress: MotionValue<number> }) {
-  const y = useTransform(progress, [0, 1], [-80, 520]);
-  const scale = useTransform(progress, [0, 1], [1.15, 0.88]);
-  const opacity = useTransform(progress, [0, 0.75, 1], [1, 0.9, 0.6]);
-  const sunBg = useTransform(
-    progress,
-    [0, 0.35, 0.7, 1],
-    [
-      "radial-gradient(circle, #fff4c2 0%, #ffb26a 37%, #ff7a4e 60%, rgba(255,120,70,0) 78%)",
-      "radial-gradient(circle, #ffd6a3 0%, #ff7a4e 45%, #c94f2a 70%, rgba(255,120,70,0) 85%)",
-      "radial-gradient(circle, #fbbf8e 0%, #d16a3c 45%, #a83a21 65%, rgba(255,120,70,0) 88%)",
-      "radial-gradient(circle, #9d5c4c 0%, #5d2b43 45%, rgba(0,0,0,0) 80%)",
-    ]
-  );
-
-  return (
-    <motion.div
-      style={{ y, scale, opacity }}
-      className="pointer-events-none absolute left-1/2 top-[12vh] h-[42rem] w-[42rem] -translate-x-1/2 rounded-full blur-2xl"
-    >
-      <motion.div style={{ background: sunBg }} className="h-full w-full rounded-full" />
-    </motion.div>
-  );
-}
-
-function HorizonLines({ progress }: { progress: MotionValue<number> }) {
-  const opacity = useTransform(progress, [0, 0.5, 1], [0.9, 0.65, 0.25]);
-  const y = useTransform(progress, [0, 1], [0, 62]);
-  const scale = useTransform(progress, [0, 1], [1, 1.04]);
-
-  return (
-    <motion.div style={{ opacity }} className="pointer-events-none absolute inset-0">
-      {/* technical grid like the Suns design */}
-      <div className="absolute left-[8%] top-[25%] h-40 w-40 border border-white/30" />
-      <motion.div
-        style={{ y, scale }}
-        className="absolute left-[8%] top-[25%] grid h-40 w-40 grid-cols-6 grid-rows-6"
-      >
-        {Array.from({ length: 36 }).map((_, i) => (
-          <div key={i} className="border border-white/10" />
-        ))}
-      </motion.div>
-
-      <div className="absolute right-[12%] top-[12%] h-52 w-52 border border-white/20" />
-
-      {/* horizon lines */}
-      <div className="absolute inset-x-0 bottom-[22%] h-px bg-white/30" />
-      <div className="absolute inset-x-0 bottom-[32%] h-px bg-white/20" />
-      <div className="absolute inset-x-0 bottom-[42%] h-px bg-white/10" />
-
-      {/* blueprint style circle */}
-      <div className="absolute left-[6%] bottom-[10%] h-36 w-36 rounded-full border border-white/20" />
-    </motion.div>
-  );
-}
-
 export default function PortfolioWebsiteStarter() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
@@ -97,37 +44,13 @@ export default function PortfolioWebsiteStarter() {
     offset: ["start start", "end end"],
   });
 
-  const sky = useTransform(
-    scrollYProgress,
-    [0, 0.35, 0.7, 1],
-    [
-      "linear-gradient(180deg, #5e77a8 0%, #7d91b7 24%, #edb082 62%, #291522 100%)",
-      "linear-gradient(180deg, #46648f 0%, #7286aa 26%, #ff9860 58%, #321726 100%)",
-      "linear-gradient(180deg, #29395d 0%, #5c5e84 30%, #d36d4c 62%, #271321 100%)",
-      "linear-gradient(180deg, #111827 0%, #1f2942 30%, #4c3040 64%, #0f0c16 100%)",
-    ]
-  );
-
-  const overlay = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    [
-      "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-      "linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))",
-      "linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.28))",
-    ]
-  );
-
   const heroY = useTransform(scrollYProgress, [0, 1], [0, -110]);
   const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.96, 0.92]);
   const sunsetOpacity = useTransform(scrollYProgress, [0, 0.25, 0.9, 1], [1, 1, 0.72, 0.6]);
 
   return (
-    <div ref={containerRef} className="bg-[#1c2733] text-white">
-      <motion.div style={{ background: sky }} className="fixed inset-0 -z-20" />
-      <motion.div style={{ background: overlay }} className="fixed inset-0 -z-10" />
-      <SunArc progress={scrollYProgress} />
-      <HorizonLines progress={scrollYProgress} />
+    <div ref={containerRef} className="text-white">
+      <SunsetCanvas />
 
       <header className="fixed inset-x-0 top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
@@ -168,7 +91,16 @@ export default function PortfolioWebsiteStarter() {
                     Cole Giardina
                   </p>
                 </div>
-                <h1 className="max-w-5xl text-7xl font-semibold leading-[0.9] tracking-tight md:text-9xl lg:text-[9rem]">
+                <h1
+                  className="max-w-5xl text-7xl font-semibold leading-[0.9] tracking-tight md:text-9xl lg:text-[9rem]"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, #ffffff 25%, #f0a050 60%, #e06878 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
+                >
                   Portfolio
                 </h1>
               </div>
