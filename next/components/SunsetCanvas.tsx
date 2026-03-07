@@ -41,7 +41,7 @@ export default function SunsetCanvas() {
 
     /* ───── sky — steel-blue base with film grain ───── */
 
-    const skyUniforms = { uProgress: { value: 0 } };
+    const skyUniforms = { uProgress: { value: 0 }, uIntro: { value: 0 } };
     const skyMesh = new THREE.Mesh(
       new THREE.PlaneGeometry(2, 2),
       new THREE.ShaderMaterial({
@@ -55,6 +55,7 @@ export default function SunsetCanvas() {
         `,
         fragmentShader: `
           uniform float uProgress;
+          uniform float uIntro;
           varying vec2 vUv;
 
           vec3 g4(float y, vec3 a, vec3 b, vec3 c, vec3 d) {
@@ -93,6 +94,10 @@ export default function SunsetCanvas() {
                      : p < 0.75 ? mix(s2, s3, (p - 0.5) / 0.25)
                      :            mix(s3, s4, (p - 0.75) / 0.25);
 
+            // vivid blue on first impression, softens as user scrolls
+            vec3 vividBlue = mix(vec3(0.12, 0.26, 0.48), vec3(0.15, 0.30, 0.52), y);
+            col = mix(vividBlue, col, uIntro);
+
             // soft peach horizon glow
             float glow = exp(-pow((y - 0.32) * 5.0, 2.0));
             float glowAmt = sin(clamp(p * 3.14159, 0.0, 3.14159)) * 0.14;
@@ -115,7 +120,7 @@ export default function SunsetCanvas() {
 
     /* ───── sun — soft cream / peach disc with wide bloom ───── */
 
-    const sunUniforms = { uProgress: { value: 0 } };
+    const sunUniforms = { uProgress: { value: 0 }, uIntro: { value: 0 } };
     const sun = new THREE.Mesh(
       new THREE.CircleGeometry(28, 64),
       new THREE.ShaderMaterial({
@@ -129,21 +134,23 @@ export default function SunsetCanvas() {
         `,
         fragmentShader: `
           uniform float uProgress;
+          uniform float uIntro;
           varying vec2 vUv;
 
           void main() {
             float d = length(vUv - 0.5) * 2.0;
-            float core = 1.0 - smoothstep(0.0, 0.35, d);
-            float mid  = 1.0 - smoothstep(0.05, 0.65, d);
-            float rim  = 1.0 - smoothstep(0.2, 1.0, d);
+            float falloff = exp(-d * d * 2.5);
 
-            // warm peach center → orange → crimson as sun sets
-            vec3 cc = mix(vec3(2.8, 2.1, 1.5), vec3(3.5, 1.0, 0.4), uProgress);
-            vec3 mc = mix(vec3(1.8, 1.2, 0.7), vec3(1.8, 0.5, 0.3), uProgress);
-            vec3 rc = mix(vec3(1.1, 0.65, 0.35), vec3(0.7, 0.15, 0.12), uProgress);
+            vec3 center = mix(vec3(2.8, 2.1, 1.5), vec3(3.5, 1.0, 0.4), uProgress);
+            vec3 edge   = mix(vec3(1.1, 0.65, 0.35), vec3(0.7, 0.15, 0.12), uProgress);
+            vec3 col = mix(edge, center, falloff);
 
-            vec3 col = cc * core + mc * mid * 0.4 + rc * rim * 0.2;
-            float a = rim * mix(1.0, 0.3, uProgress);
+            vec3 orangeCenter = vec3(2.4, 1.4, 0.5);
+            vec3 orangeEdge   = vec3(0.9, 0.4, 0.1);
+            vec3 orangeCol = mix(orangeEdge, orangeCenter, falloff);
+            col = mix(orangeCol, col, uIntro);
+
+            float a = (1.0 - smoothstep(0.3, 1.0, d)) * mix(1.0, 0.3, uProgress);
             gl_FragColor = vec4(col, a);
           }
         `,
@@ -334,27 +341,46 @@ export default function SunsetCanvas() {
     /* ───── animation loop ───── */
 
     let frameId: number;
+    const smoothstep = (x: number) => x * x * (3 - 2 * x);
+
     const tick = () => {
       frameId = requestAnimationFrame(tick);
       const t = performance.now() * 0.001;
 
-      skyUniforms.uProgress.value = progress;
-      sunUniforms.uProgress.value = progress;
-      sun.position.y = 44 - progress * 72;
+      // Camera zoom-out over first 35% of scroll
+      const zoom = smoothstep(Math.min(progress / 0.35, 1.0));
 
+      // Intro: vivid orange/blue → softer palette over first 15% of scroll
+      const intro = smoothstep(Math.min(progress / 0.15, 1.0));
+      skyUniforms.uIntro.value = intro;
+      sunUniforms.uIntro.value = intro;
+
+      // Delay sky/sun color transition until camera has pulled back
+      const skyP = Math.max(0, (progress - 0.25) / 0.75);
+
+      skyUniforms.uProgress.value = skyP;
+      sunUniforms.uProgress.value = skyP;
+
+      // Sun descends after initial zoom-out
+      const sunDescent = Math.max(0, (progress - 0.15) / 0.85);
+      sun.position.y = 44 - sunDescent * 72;
+
+      // Bloom: strong close-up, settles mid, fades to night
       bloom.strength =
-        progress < 0.55
-          ? 0.3 + progress * 1.2
-          : 0.3 + 0.66 - ((progress - 0.55) / 0.45) * 1.0;
+        progress < 0.35
+          ? 1.4 - zoom * 0.9
+          : skyP < 0.4
+            ? 0.5 + skyP * 0.75
+            : 0.8 - ((skyP - 0.4) / 0.6) * 0.7;
 
       starUniforms.uTime.value = t;
-      starUniforms.uOpacity.value = Math.max(0, (progress - 0.4) / 0.6);
+      starUniforms.uOpacity.value = Math.max(0, (skyP - 0.4) / 0.6);
 
-      const gi = progress * (gridColors.length - 1);
+      const gi = skyP * (gridColors.length - 1);
       const gLow = Math.floor(gi);
       const gHigh = Math.min(gLow + 1, gridColors.length - 1);
       const gc = gridColors[gLow].clone().lerp(gridColors[gHigh], gi - gLow);
-      const baseOp = 0.22 * (1 - progress * 0.7);
+      const baseOp = 0.22 * (1 - skyP * 0.7);
       gridMats.forEach((m) => {
         m.color.copy(gc);
         m.opacity = baseOp;
@@ -363,14 +389,17 @@ export default function SunsetCanvas() {
       mountains.forEach((m, i) => {
         (m.material as THREE.MeshBasicMaterial).color.setHSL(
           0.60 + i * 0.01,
-          0.25 + progress * 0.1,
-          Math.max(0.12 + i * 0.02 - progress * 0.04, 0.02)
+          0.25 + skyP * 0.1,
+          Math.max(0.12 + i * 0.02 - skyP * 0.04, 0.02)
         );
       });
 
+      // Camera: close to sun → pulled back to reveal full scene
       camera.position.x = Math.sin(t * 0.08) * 1.5;
-      camera.position.y = 20 + Math.cos(t * 0.12) * 0.8;
-      camera.lookAt(0, 15, -50);
+      camera.position.y =
+        THREE.MathUtils.lerp(42, 20, zoom) + Math.cos(t * 0.12) * 0.8;
+      camera.position.z = THREE.MathUtils.lerp(30, 100, zoom);
+      camera.lookAt(0, THREE.MathUtils.lerp(38, 15, zoom), -50);
 
       composer.render();
     };
