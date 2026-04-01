@@ -68,10 +68,10 @@ export default function SunsetCanvas() {
             float y = vUv.y;
             float p = uProgress;
 
-            // dusty steel blue — matches Suns poster reference
+            // deep steel blue — matches Suns poster reference
             vec3 s0 = g4(y,
-              vec3(0.22, 0.36, 0.50), vec3(0.24, 0.38, 0.53),
-              vec3(0.26, 0.40, 0.56), vec3(0.20, 0.34, 0.50));
+              vec3(0.12, 0.22, 0.38), vec3(0.14, 0.25, 0.42),
+              vec3(0.16, 0.28, 0.45), vec3(0.10, 0.20, 0.38));
             // warming at horizon
             vec3 s1 = g4(y,
               vec3(0.50, 0.38, 0.30), vec3(0.42, 0.46, 0.50),
@@ -95,7 +95,7 @@ export default function SunsetCanvas() {
                      :            mix(s3, s4, (p - 0.75) / 0.25);
 
             // vivid blue on first impression, softens as user scrolls
-            vec3 vividBlue = mix(vec3(0.12, 0.26, 0.48), vec3(0.15, 0.30, 0.52), y);
+            vec3 vividBlue = mix(vec3(0.08, 0.18, 0.38), vec3(0.10, 0.22, 0.42), y);
             col = mix(vividBlue, col, uIntro);
 
             // soft peach horizon glow
@@ -141,12 +141,12 @@ export default function SunsetCanvas() {
             float d = length(vUv - 0.5) * 2.0;
             float falloff = exp(-d * d * 2.5);
 
-            vec3 center = mix(vec3(2.8, 2.1, 1.5), vec3(3.5, 1.0, 0.4), uProgress);
-            vec3 edge   = mix(vec3(1.1, 0.65, 0.35), vec3(0.7, 0.15, 0.12), uProgress);
+            vec3 center = mix(vec3(0.95, 0.75, 0.50), vec3(1.4, 0.45, 0.2), uProgress);
+            vec3 edge   = mix(vec3(0.55, 0.35, 0.18), vec3(0.4, 0.12, 0.06), uProgress);
             vec3 col = mix(edge, center, falloff);
 
-            vec3 orangeCenter = vec3(2.4, 1.4, 0.5);
-            vec3 orangeEdge   = vec3(0.9, 0.4, 0.1);
+            vec3 orangeCenter = vec3(0.85, 0.55, 0.25);
+            vec3 orangeEdge   = vec3(0.45, 0.25, 0.08);
             vec3 orangeCol = mix(orangeEdge, orangeCenter, falloff);
             col = mix(orangeCol, col, uIntro);
 
@@ -365,13 +365,13 @@ export default function SunsetCanvas() {
       const sunDescent = Math.max(0, (progress - 0.15) / 0.85);
       sun.position.y = 44 - sunDescent * 72;
 
-      // Bloom: strong close-up, settles mid, fades to night
+      // Bloom: subtle glow, not a light source
       bloom.strength =
         progress < 0.35
-          ? 1.4 - zoom * 0.9
+          ? 0.25 - zoom * 0.1
           : skyP < 0.4
-            ? 0.5 + skyP * 0.75
-            : 0.8 - ((skyP - 0.4) / 0.6) * 0.7;
+            ? 0.15 + skyP * 0.5
+            : 0.35 - ((skyP - 0.4) / 0.6) * 0.3;
 
       starUniforms.uTime.value = t;
       starUniforms.uOpacity.value = Math.max(0, (skyP - 0.4) / 0.6);

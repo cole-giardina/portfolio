@@ -15,6 +15,34 @@ type Project = {
 
 const projects: Project[] = [
   {
+    title: "Ultra Ux",
+    subtitle: "Software development intern \u2014 Barcelona, Spain",
+    description:
+      "Contributed to a personalized sports nutrition and wellness app, collaborating with cross-functional teams in an agile environment to improve usability and performance across frontend and backend.",
+    tag: "Internship",
+  },
+  {
+    title: "Intel Project",
+    subtitle: "Data analysis for sustainability",
+    description:
+      "Utilized Python and SQL to clean, analyze, and visualize environmental sustainability data. Identified trends and presented insights to improve resource efficiency within a virtual team.",
+    tag: "Data Analysis",
+  },
+  {
+    title: "Grammys",
+    subtitle: "Website audience analysis for The Recording Academy",
+    description:
+      "Conducted data analysis across two Recording Academy websites, delivering data-driven insights into audience engagement, business metrics, and KPIs through visualizations and recommendations.",
+    tag: "Data Analysis",
+  },
+  {
+    title: "Phishing Detector",
+    subtitle: "AI-powered email threat analysis",
+    description:
+      "A FastAPI service that extracts security features from email text and classifies phishing threats using Claude, with explainable signals and structured detection results.",
+    tag: "Cybersecurity",
+  },
+  {
     title: "Token",
     subtitle: "Meaningful objects, digitally preserved",
     description:
@@ -27,13 +55,6 @@ const projects: Project[] = [
     description:
       "A premium lifestyle brand inspired by Italian heritage, Arizona roots, and a more elevated alternative to party-first beverage brands.",
     tag: "Brand System",
-  },
-  {
-    title: "Cybersecurity / GRC",
-    subtitle: "Controls, compliance, and risk thinking",
-    description:
-      "Coursework and analysis centered on governance, risk, compliance, internal controls, and practical business-security alignment.",
-    tag: "Security Focus",
   },
 ];
 
@@ -82,7 +103,7 @@ export default function PortfolioWebsiteStarter() {
               className="self-center"
             >
               <p className="mb-5 text-xs uppercase tracking-[0.35em] text-white/60 md:text-sm">
-                Phoenix • Arizona
+                Tempe • Arizona
               </p>
               <div className="max-w-3xl">
                 <div className="mb-3 flex items-start gap-3">
@@ -105,7 +126,7 @@ export default function PortfolioWebsiteStarter() {
                 </h1>
               </div>
               <p className="mt-8 max-w-xl text-sm leading-7 text-white/75 md:text-base">
-                A portfolio direction inspired by Phoenix editorial sports graphics — reimagined as an immersive, interactive site for cybersecurity, digital products, and modern business systems.
+                Computer Information Systems student at Arizona State University with hands-on experience in software development, data analysis, and cybersecurity governance — building at the intersection of technology and business.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <a
@@ -131,13 +152,13 @@ export default function PortfolioWebsiteStarter() {
                 </div>
                 <div className="relative rounded-[2rem] border border-white/15 bg-black/10 p-6 backdrop-blur-md">
                   <div className="mb-6 flex items-center justify-between text-[11px] uppercase tracking-[0.3em] text-white/50">
-                    <span>Featured Theme</span>
-                    <span>Phoenix / Arizona</span>
+                    <span>W.P. Carey School of Business</span>
+                    <span>ASU &apos;26</span>
                   </div>
                   <div className="aspect-[3/4] rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] p-5">
                     <div className="flex h-full flex-col justify-between rounded-[1.25rem] border border-white/10 p-5">
                       <div>
-                        <p className="text-xs uppercase tracking-[0.35em] text-white/45">Core Identity</p>
+                        <p className="text-xs uppercase tracking-[0.35em] text-white/45">B.S. Computer Information Systems</p>
                         <h2 className="mt-3 text-4xl font-semibold leading-none md:text-5xl">
                           Cole
                           <br />
@@ -146,7 +167,7 @@ export default function PortfolioWebsiteStarter() {
                       </div>
                       <div>
                         <p className="max-w-xs text-sm leading-7 text-white/70">
-                          Cybersecurity-minded builder with an eye for product, branding, and business execution.
+                          Cybersecurity-minded builder with experience in software development, data analysis, and GRC.
                         </p>
                       </div>
                     </div>
@@ -162,28 +183,28 @@ export default function PortfolioWebsiteStarter() {
             <div>
               <p className="text-xs uppercase tracking-[0.35em] text-white/45">About</p>
               <h2 className="mt-4 text-4xl font-semibold leading-tight md:text-6xl">
-                Editorial energy,
+                Technology meets
                 <br />
-                personal narrative.
+                business thinking.
               </h2>
             </div>
             <div className="grid gap-6 md:grid-cols-2">
               {[
                 [
-                  "Design Direction",
-                  "Oversized typography, cinematic gradients, framed layouts, and desert-sky color transitions inspired by Phoenix sports identity.",
+                  "Education",
+                  "B.S. in Computer Information Systems from the W.P. Carey School of Business at Arizona State University, graduating May 2026.",
                 ],
                 [
-                  "Best Use",
-                  "Perfect if you want your portfolio to feel memorable, premium, and distinctly Arizona rather than looking like a generic software template.",
+                  "Experience",
+                  "Software development intern at Ultra Ux in Barcelona, SQL & Python trainee at The Global Career Accelerator, and hands-on management at Vito\u2019s Italian Ristorante.",
                 ],
                 [
-                  "Interactive Layer",
-                  "As the viewer scrolls, the sky can shift from bright sunset tones into twilight while the sun drops toward the horizon line.",
+                  "Certifications",
+                  "GRC Mastery Course in Governance, Risk & Compliance. Arizona State University Coding for Data Track.",
                 ],
                 [
-                  "Your Angle",
-                  "This fits you especially well because it blends business polish, product thinking, and a visual identity tied to Phoenix.",
+                  "Technical Skills",
+                  "Python, SQL, Java, JavaScript, HTML/CSS, Tableau, Excel. Frameworks include NIST CSF, ISO 27001, HIPAA, GDPR, and PCI-DSS.",
                 ],
               ].map(([title, body]) => (
                 <div key={title} className="rounded-[2rem] border border-white/10 bg-black/10 p-6 backdrop-blur-sm">
@@ -203,7 +224,7 @@ export default function PortfolioWebsiteStarter() {
                 <h2 className="mt-4 text-4xl font-semibold md:text-6xl">Selected Work</h2>
               </div>
               <p className="max-w-xl text-sm leading-7 text-white/70">
-                These can become cinematic project panels with hover motion, screenshots, and individual case-study pages.
+                Professional experience, data projects, and personal ventures spanning software development, analytics, and brand building.
               </p>
             </div>
 
@@ -237,8 +258,8 @@ export default function PortfolioWebsiteStarter() {
           <div className="mx-auto grid max-w-7xl gap-8 rounded-[2rem] border border-white/10 bg-black/10 p-8 backdrop-blur-sm md:grid-cols-3">
             {[
               "Cybersecurity & GRC",
-              "Business Systems",
-              "Brand + Product Thinking",
+              "Software Development",
+              "Data Analysis & Visualization",
             ].map((item) => (
               <div key={item} className="rounded-[1.5rem] border border-white/10 p-6">
                 <p className="text-xs uppercase tracking-[0.35em] text-white/40">Focus Area</p>
@@ -251,25 +272,29 @@ export default function PortfolioWebsiteStarter() {
         <section id="contact" className="relative px-6 pb-24 pt-10 lg:px-10">
           <div className="mx-auto max-w-5xl rounded-[2rem] border border-white/10 bg-black/10 p-10 text-center backdrop-blur-sm">
             <p className="text-xs uppercase tracking-[0.35em] text-white/45">Contact</p>
-            <h2 className="mt-4 text-4xl font-semibold md:text-6xl">Build the Arizona version.</h2>
+            <h2 className="mt-4 text-4xl font-semibold md:text-6xl">Let&apos;s connect.</h2>
             <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/75">
-              Next step is replacing the placeholder copy with your real projects, resume, GitHub, LinkedIn, and a custom image treatment so the experience feels fully yours.
+              Open to opportunities in cybersecurity, software development, and data-driven roles. Based in Tempe, Arizona.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <a
-                href="mailto:your@email.com"
+                href="mailto:cvgiardi@asu.edu"
                 className="rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm uppercase tracking-[0.2em] text-white transition hover:bg-white/20"
               >
                 Email
               </a>
               <a
-                href="#"
+                href="https://linkedin.com/in/cole-giardina-166454302"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-full border border-white/15 px-6 py-3 text-sm uppercase tracking-[0.2em] text-white/80 transition hover:border-white/30 hover:text-white"
               >
                 LinkedIn
               </a>
               <a
-                href="#"
+                href="https://github.com/cole-giardina"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-full border border-white/15 px-6 py-3 text-sm uppercase tracking-[0.2em] text-white/80 transition hover:border-white/30 hover:text-white"
               >
                 GitHub
