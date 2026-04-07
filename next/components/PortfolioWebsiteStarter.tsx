@@ -11,6 +11,7 @@ type Project = {
   subtitle: string;
   description: string;
   tag: string;
+  image?: string;
 };
 
 const projects: Project[] = [
@@ -20,6 +21,7 @@ const projects: Project[] = [
     description:
       "Contributed to a personalized sports nutrition and wellness app, collaborating with cross-functional teams in an agile environment to improve usability and performance across frontend and backend.",
     tag: "Internship",
+    image: "/ultra-ux-logo.png",
   },
   {
     title: "Intel Project",
@@ -41,20 +43,6 @@ const projects: Project[] = [
     description:
       "A FastAPI service that extracts security features from email text and classifies phishing threats using Claude, with explainable signals and structured detection results.",
     tag: "Cybersecurity",
-  },
-  {
-    title: "Token",
-    subtitle: "Meaningful objects, digitally preserved",
-    description:
-      "A concept app that lets users photograph physical objects and record the story, memory, or emotion attached to them.",
-    tag: "Product Concept",
-  },
-  {
-    title: "Polmone Nero",
-    subtitle: "Brand, packaging, and digital identity",
-    description:
-      "A premium lifestyle brand inspired by Italian heritage, Arizona roots, and a more elevated alternative to party-first beverage brands.",
-    tag: "Brand System",
   },
 ];
 
@@ -238,9 +226,14 @@ export default function PortfolioWebsiteStarter() {
                   transition={{ duration: 0.55, delay: index * 0.08 }}
                   className="group rounded-[2rem] border border-white/10 bg-black/10 p-5 backdrop-blur-sm"
                 >
-                  <div className="mb-5 aspect-[4/5] rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01))] p-4 transition duration-300 group-hover:scale-[1.01]">
+                  <div className="mb-5 aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01))] p-4 transition duration-300 group-hover:scale-[1.01]">
                     <div className="flex h-full flex-col justify-between rounded-[1.25rem] border border-white/10 p-4">
                       <p className="text-[11px] uppercase tracking-[0.35em] text-white/45">{project.tag}</p>
+                      {project.image && (
+                        <div className="flex flex-1 items-center justify-center py-4">
+                          <img src={project.image} alt={project.title} className="max-h-20 max-w-[70%] object-contain" />
+                        </div>
+                      )}
                       <div>
                         <p className="text-3xl font-semibold leading-none">{project.title}</p>
                         <p className="mt-3 text-sm text-white/65">{project.subtitle}</p>
