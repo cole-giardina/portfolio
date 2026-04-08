@@ -12,6 +12,7 @@ type Project = {
   description: string;
   tag: string;
   image?: string;
+  link?: string;
 };
 
 const projects: Project[] = [
@@ -24,25 +25,19 @@ const projects: Project[] = [
     image: "/ultra-ux-logo.png",
   },
   {
-    title: "Intel Project",
-    subtitle: "Data analysis for sustainability",
+    title: "Intel & Grammys",
+    subtitle: "Data analysis for Intel sustainability and The Recording Academy",
     description:
-      "Utilized Python and SQL to clean, analyze, and visualize environmental sustainability data. Identified trends and presented insights to improve resource efficiency within a virtual team.",
+      "Used Python, SQL, and Tableau to analyze sustainability data for Intel and audience engagement across Recording Academy websites, delivering actionable insights and data-driven recommendations.",
     tag: "Data Analysis",
   },
   {
-    title: "Grammys",
-    subtitle: "Website audience analysis for The Recording Academy",
-    description:
-      "Conducted data analysis across two Recording Academy websites, delivering data-driven insights into audience engagement, business metrics, and KPIs through visualizations and recommendations.",
-    tag: "Data Analysis",
-  },
-  {
-    title: "Phishing Detector",
+    title: "Risk Radar",
     subtitle: "AI-powered email threat analysis",
     description:
       "A FastAPI service that extracts security features from email text and classifies phishing threats using Claude, with explainable signals and structured detection results.",
     tag: "Cybersecurity",
+    link: "https://cole-giardina.github.io/riskradar/",
   },
 ];
 
@@ -224,7 +219,8 @@ export default function PortfolioWebsiteStarter() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.25 }}
                   transition={{ duration: 0.55, delay: index * 0.08 }}
-                  className="group rounded-[2rem] border border-white/10 bg-black/10 p-5 backdrop-blur-sm"
+                  className={`group rounded-[2rem] border border-white/10 bg-black/10 p-5 backdrop-blur-sm${project.link ? " cursor-pointer" : ""}`}
+                  onClick={project.link ? () => window.open(project.link, "_blank") : undefined}
                 >
                   <div className="mb-5 aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01))] p-4 transition duration-300 group-hover:scale-[1.01]">
                     <div className="flex h-full flex-col justify-between rounded-[1.25rem] border border-white/10 p-4">
@@ -241,6 +237,9 @@ export default function PortfolioWebsiteStarter() {
                     </div>
                   </div>
                   <p className="text-sm leading-7 text-white/75">{project.description}</p>
+                  {project.link && (
+                    <p className="mt-3 text-xs uppercase tracking-[0.25em] text-white/40">View Project &rarr;</p>
+                  )}
                 </motion.div>
               ))}
             </div>
